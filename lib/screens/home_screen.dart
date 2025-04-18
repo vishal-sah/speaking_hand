@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:speaking_hand/widgets/camera_view.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,6 +11,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool isCameraInitialized = false;
   String detectedText = "";
+  final ValueNotifier<int> toggleCameraNotifier = ValueNotifier(0);
 
   final TextStyle subtitleStyle = const TextStyle(
     fontSize: 24,
@@ -43,7 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 // Camera or start camera button
                 isCameraInitialized
-                    ? const Placeholder()
+                    ? CameraView(
+                        onSignDetected: onSignDetected,
+                        toggleCameraNotifier: toggleCameraNotifier,
+                      )
                     : Center(
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.camera_alt),
