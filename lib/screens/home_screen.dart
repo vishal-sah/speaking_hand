@@ -80,10 +80,6 @@ class _HomeScreenState extends State<HomeScreen> {
       _removeTranslatedTextListener();
     } else {
       _addTranslatedTextListener();
-      // Optionally speak the current value immediately
-      // if (translatedText.value.trim().isNotEmpty) {
-      //   _speak(translatedText.value.trim());
-      // }
     }
 
     setState(() {
