@@ -30,8 +30,8 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   late final IsolateHandler _isolateHandler;
 
   Future<void> initIsolateAndStartCamera() async {
-    final modelBytes = await rootBundle.load('assets/model2.tflite');
-    final labelsFile = await rootBundle.loadString('assets/labels2.txt');
+    final modelBytes = await rootBundle.load('assets/model0.tflite');
+    final labelsFile = await rootBundle.loadString('assets/labels0.txt');
     final labels = labelsFile.split('\n');
 
     _isolateHandler = IsolateHandler();
