@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
@@ -10,10 +9,10 @@ class CameraView extends StatefulWidget {
   final ValueNotifier<void> toggleCameraNotifier;
 
   const CameraView({
-    Key? key,
+    super.key,
     required this.onSignDetected,
     required this.toggleCameraNotifier,
-  }) : super(key: key);
+  });
 
   @override
   _CameraViewState createState() => _CameraViewState();
@@ -26,16 +25,23 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   Timer? _captureTimer;
   // final SignLanguageService _signLanguageService = SignLanguageService();
   late final List<String> globalLabels;
-  late final Uint8List globalModel;
   late final IsolateHandler _isolateHandler;
 
   Future<void> initIsolateAndStartCamera() async {
-    final modelBytes = await rootBundle.load('assets/model0.tflite');
+    final signModelBytes = await rootBundle.load('assets/model0.tflite');
+    final handModelBytes = await rootBundle.load('assets/hand_detector.tflite');
+    final landmarkModelBytes =
+        await rootBundle.load('assets/hand_landmarks_detector.tflite');
     final labelsFile = await rootBundle.loadString('assets/labels0.txt');
     final labels = labelsFile.split('\n');
 
     _isolateHandler = IsolateHandler();
-    await _isolateHandler.init(modelBytes.buffer.asUint8List(), labels);
+    await _isolateHandler.init(
+      signModelBytes.buffer.asUint8List(),
+      handModelBytes.buffer.asUint8List(),
+      landmarkModelBytes.buffer.asUint8List(),
+      labels,
+    );
 
     _initializeCamera();
   }
