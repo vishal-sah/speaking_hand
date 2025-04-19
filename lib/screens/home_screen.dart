@@ -33,6 +33,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  void toggleCamera() {
+    toggleCameraNotifier.value = toggleCameraNotifier.value == 0 ? 1 : 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,9 +50,9 @@ class _HomeScreenState extends State<HomeScreen> {
                 // Camera or start camera button
                 isCameraInitialized
                     ? CameraView(
-                        onSignDetected: onSignDetected,
-                        toggleCameraNotifier: toggleCameraNotifier,
-                      )
+                      onSignDetected: onSignDetected,
+                      toggleCameraNotifier: toggleCameraNotifier,
+                    )
                     : Center(
                       child: ElevatedButton.icon(
                         icon: const Icon(Icons.camera_alt),
@@ -62,6 +66,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
+                if (isCameraInitialized)
+                  Positioned(
+                    right: 20,
+                    top: 80,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.5),
+                        shape: BoxShape.circle,
+                      ),
+                      child: IconButton(
+                        icon: Icon(Icons.cameraswitch, color: Colors.white),
+                        onPressed: toggleCamera,
+                        tooltip: 'Toggle Camera',
+                      ),
+                    ),
+                  ),
               ],
             ),
           ),
