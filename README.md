@@ -16,6 +16,7 @@ Speaking Hand is an innovative project designed to bridge the communication gap 
 - **Text to Speech in regional language**: For people who cannot read.
 
 ## Demo Video Link:
+  <a href="https://youtu.be/dYTm01HV2FQ"> Demo link here </a>
   
 ## Presentation Link:
   <a href="https://tinyurl.com/flah-hack36"> PPT link here </a>
