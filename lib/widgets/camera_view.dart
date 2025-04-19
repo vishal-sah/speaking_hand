@@ -1,7 +1,9 @@
 import 'dart:async';
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/services.dart';
+import 'package:image/image.dart' as img;
 import 'package:speaking_hand/services/isolate_handler.dart';
 
 class CameraView extends StatefulWidget {
@@ -159,16 +161,27 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       // Capture a frame from the camera
       final XFile image = await _cameraController!.takePicture();
 
-      // Process the captured image with the sign language model
+      // Load the image as bytes
+      final bytes = await image.readAsBytes();
 
-      // final result = await _signLanguageService.detectSign(image.path);
+      // Decode the image and resize it to match the model's input dimensions
+      final decodedImage = img.decodeImage(bytes);
+      if (decodedImage == null) {
+        throw Exception('Failed to decode image');
+      }
 
-      // final result = await _signLanguageService.detectSign(image.path);
+      // final resizedImage = img.copyResize(
+      //   decodedImage,
+      //   width: 224, // Replace with your model's expected width
+      //   height: 224, // Replace with your model's expected height
+      // );
 
+      // Convert the resized image to a tensor
+      // final inputTensor = _convertImageToTensor(resizedImage);
+
+      // Run inference using the isolate handler
+      // Remove the 'as String' cast
       final results = await _isolateHandler.predict(image.path);
-
-      // final result =
-      // await detectSignInIsolate(image.path, globalModel, globalLabels);
 
       // If a sign is detected, call the callback
       if (results.isNotEmpty) {
@@ -180,12 +193,25 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
         widget.onSignDetected('');
       }
     } catch (e) {
-      print('Error processing frame: $e');
+      print('Error in prediction pipeline: $e');
     } finally {
       if (mounted) {
         _isDetecting = false;
       }
     }
+  }
+
+  // Helper function to convert an image to a tensor
+  Uint8List _convertImageToTensor(img.Image image) {
+    // Convert the image to a byte array
+    final pixels = image.getBytes(order: img.ChannelOrder.rgb);
+
+    // Normalize pixel values to [0, 1] (if required by the model)
+    final normalizedPixels = pixels.map((pixel) => pixel / 255.0).toList();
+
+    // Convert the normalized pixels to Uint8List
+    return Uint8List.fromList(
+        normalizedPixels.map((e) => (e * 255).toInt()).toList());
   }
 
   @override

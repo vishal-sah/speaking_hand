@@ -140,7 +140,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ISL Translator')),
+      appBar: AppBar(title: const Text('Speaking Hand')),
       body: Column(
         children: [
           Expanded(
